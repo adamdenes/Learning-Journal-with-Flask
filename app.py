@@ -19,14 +19,18 @@ def before_request():
 @app.after_request
 def after_request(response):
     g.database.close()
-    # TODO: do I need this?
     return response
 
 
 @app.route('/')
-@app.route('/entries')
 def index():
-    return render_template('index.html')
+    entries = models.Journal.select()
+    return render_template('index.html', entries=entries)
+
+
+@app.route('/entries')
+def entries():
+    return redirect(url_for('index'))
 
 
 @app.route('/entries/new')
@@ -34,8 +38,8 @@ def new():
     pass
 
 
-@app.route('/entries/<id>')
-def detail():
+@app.route('/entries/<int:id>')
+def detail(id):
     pass
 
 
