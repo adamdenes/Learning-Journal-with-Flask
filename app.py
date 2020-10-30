@@ -1,14 +1,17 @@
 from flask import (Flask, g, render_template, flash, redirect, url_for)
+from flask_bcrypt import generate_password_hash
 
+import os
 import models
 
 
 DEBUG = True
 PORT = 8000
 HOST = '0.0.0.0'
+SECRET = os.urandom(24).hex()
 
 app = Flask(__name__)
-
+app.secret_key = generate_password_hash(SECRET)
 
 @app.before_request
 def before_request():
@@ -24,12 +27,14 @@ def after_request(response):
 
 @app.route('/')
 def index():
+    """Index route/view, renders all titles and dates from all journal entries."""
     entries = models.Journal.select()
     return render_template('index.html', entries=entries)
 
 
 @app.route('/entries')
 def entries():
+    """Entries route/view, redirects to index view."""
     return redirect(url_for('index'))
 
 
@@ -40,13 +45,19 @@ def new():
 
 @app.route('/entries/<int:id>')
 def detail(id):
-    pass
+    """Detail route/view."""
+    try:
+        entry = models.Journal.select().where(
+            models.Journal.id == id
+            ).get()
+    except models.DoesNotExist:
+        return redirect(url_for('index'))
+    return render_template('detail.html', entry=entry)
 
 
 @app.route('/entries/<id>/edit')
 def edit():
     pass
-
 
 @app.route('/entries/<id>/delete')
 def delete():
@@ -58,7 +69,6 @@ if __name__ == '__main__':
     try:
         models.Journal.create_journal(
             title='Test title',
-            date=models.Journal.date,
             time_spent=5,
             learned='Learned about Flask...',
             resources='Treehouse and stackoverflow...'
