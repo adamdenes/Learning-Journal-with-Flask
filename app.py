@@ -102,9 +102,19 @@ def edit(id):
     return render_template('edit.html', edit_form=edit_form, entry=entry)
 
 
-@app.route('/entries/<id>/delete')
-def delete():
-    pass
+@app.route('/entries/<int:id>/delete', methods=('GET', 'POST'))
+def delete(id):
+    try:
+        entry = models.Journal.select().where(
+            models.Journal.id == id
+        ).get()
+    except models.DoesNotExist:
+        flash('Entry id does not exist!')
+
+    with models.DATABASE.atomic():
+        models.Journal.delete_by_id(entry)
+        flash('Following entry was deleted: {}'.format(entry.id))
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':

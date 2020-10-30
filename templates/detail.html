@@ -13,7 +13,7 @@
                 </div>
                 <div class="entry">
                     <h3>What I Learned:</h3>
-                    <p>{{ entry.learned }}.</p>
+                    <p>{{ entry.learned }}</p>
                 </div>
                 <div class="entry">
                     <h3>Resources to Remember:</h3>
@@ -26,6 +26,7 @@
     </div>
     <div class="edit">
         <p><a href="{{ url_for('edit', id=entry.id) }}">Edit Entry</a></p>
+        <p><a href="{{ url_for('delete', id=entry.id) }}">Delete Entry</a></p>
     </div>
 </section>
 {% endblock %}
