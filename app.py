@@ -95,7 +95,7 @@ def edit(id):
                 time_spent=edit_form.journal_time_spent.data,
                 learned=edit_form.journal_learned.data,
                 resources=edit_form.journal_resources.data
-            ).execute()
+            ).where(models.Journal.id == id).execute()
 
             return redirect(url_for('detail', id=id))
 
