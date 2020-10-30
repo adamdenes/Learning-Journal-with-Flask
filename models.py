@@ -7,8 +7,7 @@ DATABASE = SqliteDatabase('journal.db')
 
 
 class Journal(Model):
-    id = AutoField()
-    title = CharField(max_length=255, unique=True)
+    title = CharField(max_length=255)
     date = DateTimeField(default=datetime.datetime.now)
     time_spent = IntegerField(default=0)
     learned = TextField()
@@ -19,12 +18,11 @@ class Journal(Model):
         order_by = ('-date',)
 
     @classmethod
-    def create_journal(cls, title, date, time_spent, learned, resources):
+    def create_journal(cls, title, time_spent, learned, resources):
         try:
             with DATABASE.transaction():
                 cls.create(
                     title=title,
-                    date=date,
                     time_spent=time_spent,
                     learned=learned,
                     resources=resources
