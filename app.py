@@ -46,18 +46,19 @@ def entries():
 @app.route('/entries/new', methods=('GET', 'POST'))
 def add():
     """Adding journal entry to the database and view."""
-    form = forms.AddEntryForm()
+    form = forms.AddEntryForm(request.form)
 
-    if form.validate_on_submit():
-        new_entry = models.Journal.create_journal(
-            title=form.journal_title.data,
-            date=form.journal_date.data,
-            time_spent=form.journal_time_spent.data,
-            learned=form.journal_learned.data,
-            resources=form.journal_resources.data
-        )
-        return redirect(url_for('detail', new_entry=new_entry))
-        
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            models.Journal.create_journal(
+                title=form.journal_title.data,
+                date=form.journal_date.data,
+                time_spent=form.journal_time_spent.data,
+                learned=form.journal_learned.data,
+                resources=form.journal_resources.data
+            )
+
+            return redirect(url_for('index'))
     return render_template('new.html', form=form)
 
 
@@ -73,9 +74,32 @@ def detail(id):
     return render_template('detail.html', entry=entry)
 
 
-@app.route('/entries/<id>/edit')
-def edit():
-    pass
+@app.route('/entries/<id>/edit', methods=('GET', 'POST'))
+def edit(id):
+    """Edit existing entry."""
+
+    try:
+        entry = models.Journal.select().where(
+            models.Journal.id == id
+        ).get()
+    except models.DoesNotExist:
+        return redirect(url_for('detail', entry=id))
+
+    edit_form = forms.AddEntryForm()
+
+    if request.method == 'POST':
+        if edit_form.validate_on_submit():
+            models.Journal.update(
+                title=edit_form.journal_title.data,
+                date=edit_form.journal_date.data,
+                time_spent=edit_form.journal_time_spent.data,
+                learned=edit_form.journal_learned.data,
+                resources=edit_form.journal_resources.data
+            ).execute()
+
+            return redirect(url_for('detail', id=id))
+
+    return render_template('edit.html', edit_form=edit_form, entry=entry)
 
 
 @app.route('/entries/<id>/delete')
@@ -85,16 +109,4 @@ def delete():
 
 if __name__ == '__main__':
     models.initialize()
-
-    # creating a test entry
-    try:
-        models.Journal.create_journal(
-            title='Test title',
-            time_spent=5,
-            learned='Learned about Flask...',
-            resources='Treehouse and stackoverflow...'
-        )
-    except ValueError:
-        pass
-
     app.run(debug=DEBUG, port=PORT, host=HOST)

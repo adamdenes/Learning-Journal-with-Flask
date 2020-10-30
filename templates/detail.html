@@ -25,8 +25,7 @@
         </div>
     </div>
     <div class="edit">
-        <!-- {{ url_for('edit', id=entry.id) }} -->
-        <p><a href="edit.html">Edit Entry</a></p>
+        <p><a href="{{ url_for('edit', id=entry.id) }}">Edit Entry</a></p>
     </div>
 </section>
 {% endblock %}

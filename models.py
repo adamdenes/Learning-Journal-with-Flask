@@ -18,18 +18,19 @@ class Journal(Model):
         order_by = ('-date',)
 
     @classmethod
-    def create_journal(cls, title, time_spent, learned, resources):
+    def create_journal(cls, title, date, time_spent, learned, resources):
         try:
             with DATABASE.transaction():
                 cls.create(
                     title=title,
+                    date=date,
                     time_spent=time_spent,
                     learned=learned,
                     resources=resources
                 )
         except IntegrityError:
-            raise ValueError('Journal with that title already exist!')
-
+            raise ValueError('Journal was not created!')
+        
 
 def initialize():
     DATABASE.connect()
