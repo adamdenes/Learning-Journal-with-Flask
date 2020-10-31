@@ -1,7 +1,5 @@
 {% extends "layout.html" %}
 
-{% from 'macros.html' import render_field %}
-
 {% block section %}
 <section>
     <div class="container">
@@ -9,11 +7,11 @@
             <h2>Edit Entry</h2>
             <form action="{{ url_for('edit', id=entry.id) }}" method='POST'>
                 {{ edit_form.hidden_tag() }}
-                {{ render_field(edit_form.journal_title, entry.title) }}
-                {{ render_field(edit_form.journal_date, entry.date.strftime('%Y-%m-%d')) }}
-                {{ render_field(edit_form.journal_time_spent, entry.time_spent) }}
-                <textarea name="journal_learned" value="{{ entry.journal_learned }}">{{ entry.journal_learned }}</textarea>
-                <textarea name="journal_resources" value="{{ entry.journal_resources }}">{{ entry.journal_resources }}</textarea>
+                <input id="title" type="text" name="journal_title" value="{{ entry.title }}"><br>
+                <input id="date" type="text" name="journal_date" value="{{ entry.date.strftime('%Y-%m-%d') }}"><br>
+                <input id="time-spent" type="text" name="journal_time_spent" value="{{ entry.time_spent }}"><br>
+                <textarea id="what-i-learned" rows="5" name="journal_learned" value="{{ entry.learned }}">{{ entry.learned }}</textarea>
+                <textarea id="resources-to-remember" rows="5" name="journal_resources" value="{{ entry.resources }}">{{ entry.resources }}</textarea>
                 <input type="submit" value="Publish Entry" class="button">
                 <a href="{{ url_for('detail', id=entry.id) }}" class="button button-secondary">Cancel</a>
             </form>

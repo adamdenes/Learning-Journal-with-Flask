@@ -46,19 +46,18 @@ def entries():
 @app.route('/entries/new', methods=('GET', 'POST'))
 def add():
     """Adding journal entry to the database and view."""
-    form = forms.AddEntryForm(request.form)
+    form = forms.AddEntryForm()
 
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            models.Journal.create_journal(
-                title=form.journal_title.data,
-                date=form.journal_date.data,
-                time_spent=form.journal_time_spent.data,
-                learned=form.journal_learned.data,
-                resources=form.journal_resources.data
-            )
+    if form.validate_on_submit():
+        models.Journal.create_journal(
+            title=form.journal_title.data,
+            date=form.journal_date.data,
+            time_spent=form.journal_time_spent.data,
+            learned=form.journal_learned.data,
+            resources=form.journal_resources.data
+        )
 
-            return redirect(url_for('index'))
+        return redirect(url_for('index'))
     return render_template('new.html', form=form)
 
 
@@ -87,18 +86,16 @@ def edit(id):
 
     edit_form = forms.AddEntryForm()
 
-    if request.method == 'POST':
-        if edit_form.validate_on_submit():
-            models.Journal.update(
-                title=edit_form.journal_title.data,
-                date=edit_form.journal_date.data,
-                time_spent=edit_form.journal_time_spent.data,
-                learned=edit_form.journal_learned.data,
-                resources=edit_form.journal_resources.data
-            ).where(models.Journal.id == id).execute()
+    if edit_form.validate_on_submit():
+        models.Journal.update(
+            title=edit_form.journal_title.data,
+            date=edit_form.journal_date.data,
+            time_spent=edit_form.journal_time_spent.data,
+            learned=edit_form.journal_learned.data,
+            resources=edit_form.journal_resources.data
+        ).where(models.Journal.id == id).execute()
 
-            return redirect(url_for('detail', id=id))
-
+        return redirect(url_for('detail', id=id))
     return render_template('edit.html', edit_form=edit_form, entry=entry)
 
 

@@ -8,11 +8,6 @@
             <form action="{{ url_for('add') }}" method="POST">
                 {{ form.hidden_tag() }}
                 {% for field in form %}
-                    {% if error in field.errors %}
-                        {% for error in field.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    {% endif %}
                     {{ field(placeholder=field.label.text)}}
                 {% endfor %}
                 <input type="submit" value="Publish Entry" class="button">

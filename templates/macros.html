@@ -2,3 +2,10 @@
     {{ field.label }}
     {{ field(value=value) }}
 {% endmacro %}
+
+
+{% from 'macros.html' import render_field %}
+
+{{ render_field(edit_form.journal_title, entry.title) }}
+{{ render_field(edit_form.journal_date, entry.date.strftime('%Y-%m-%d')) }}
+{{ render_field(edit_form.journal_time_spent, entry.time_spent) }}
