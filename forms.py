@@ -1,24 +1,19 @@
 from flask_wtf.form import FlaskForm
 from wtforms.fields.core import DateField, IntegerField, StringField
 from wtforms.fields.simple import TextAreaField
-from wtforms.validators import DataRequired, Optional, ValidationError
+from wtforms.validators import DataRequired, Optional
 
 from models import Journal
-
-
-def entry_exist(form, field):
-    if Journal.select().where(Journal.title == field.data).exists():
-        raise ValidationError('Entry with that title already exists.')
 
 
 class AddEntryForm(FlaskForm):
     journal_title = StringField(
         'Title',
-        validators=[DataRequired(), entry_exist]
+        validators=[DataRequired()]
     )
     journal_date = DateField(
         'YYYY-MM-DD',
-        validators=[Optional()],
+        validators=[DataRequired()],
         format='%Y-%m-%d'
     )
     journal_time_spent = IntegerField(
