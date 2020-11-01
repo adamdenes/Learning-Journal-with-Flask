@@ -1,6 +1,6 @@
 from flask_wtf.form import FlaskForm
 from wtforms.fields.core import DateField, IntegerField, StringField
-from wtforms.fields.simple import TextAreaField
+from wtforms.fields.simple import TextAreaField, PasswordField
 from wtforms.validators import DataRequired, Optional
 
 from models import Journal
@@ -28,3 +28,8 @@ class AddEntryForm(FlaskForm):
         'Resources to Remember',
         validators=[Optional()]
     )
+
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()], default='')
+    password = PasswordField('Password', validators=[DataRequired()])

@@ -1,7 +1,8 @@
 import datetime
 
 from peewee import *
-
+from flask_login import UserMixin
+from flask_bcrypt import generate_password_hash
 
 DATABASE = SqliteDatabase('journal.db')
 
@@ -30,9 +31,26 @@ class Journal(Model):
                 )
         except IntegrityError:
             raise ValueError('Journal was not created!')
-        
+
+
+class User(UserMixin, Model):
+    username = CharField(unique=True)
+    password = CharField(unique=True)
+
+    class Meta:
+        database = DATABASE
+
+    @classmethod
+    def create_user(cls, username, password):
+        try:
+            with DATABASE.transaction():
+                cls.create(username=username,
+                           password=generate_password_hash(password))
+        except IntegrityError:
+            pass
+
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([Journal], safe=True)
+    DATABASE.create_tables([Journal, User], safe=True)
     DATABASE.close()

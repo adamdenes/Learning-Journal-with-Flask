@@ -1,14 +1,17 @@
 from flask import (Flask, g, render_template, flash,
-                   redirect, url_for, request)
-from flask_bcrypt import generate_password_hash
+                   redirect, url_for)
+from flask_bcrypt import generate_password_hash, check_password_hash
+from flask_login import LoginManager, login_required, login_user
 
 import os
+import datetime 
 
-from peewee import IntegrityError
 import models
 import forms
 
-
+################################
+# app config
+################################
 DEBUG = True
 PORT = 8000
 HOST = '0.0.0.0'
@@ -16,6 +19,22 @@ SECRET = os.urandom(24).hex()
 
 app = Flask(__name__)
 app.secret_key = generate_password_hash(SECRET)
+
+################################
+# login
+################################
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+
+@login_manager.user_loader
+def user(uid):
+    try:
+        return models.User.get(models.User.id == uid)
+    except models.DoesNotExist:
+        flash("User does not exist")
+        return None
 
 
 @app.before_request
@@ -28,6 +47,24 @@ def before_request():
 def after_request(response):
     g.database.close()
     return response
+
+
+@app.route('/login', methods=('GET', 'POST'))
+def login():
+    form = forms.LoginForm()
+    if form.validate_on_submit():
+        try:
+            user = models.User.get(models.User.username == form.username.data)
+        except models.DoesNotExist:
+            flash("Username or password is wrong.", "error")
+        else:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user)
+                flash("You have logged in!")
+                return redirect(url_for('index'))
+            else:
+                flash("Username or password is wrong.", "error")
+    return render_template('login.html', form=form)
 
 
 @app.route('/')
@@ -44,6 +81,7 @@ def entries():
 
 
 @app.route('/entries/new', methods=('GET', 'POST'))
+@login_required
 def add():
     """Adding journal entry to the database and view."""
     form = forms.AddEntryForm()
@@ -74,6 +112,7 @@ def detail(id):
 
 
 @app.route('/entries/<id>/edit', methods=('GET', 'POST'))
+@login_required
 def edit(id):
     """Edit existing entry."""
 
@@ -100,6 +139,7 @@ def edit(id):
 
 
 @app.route('/entries/<int:id>/delete', methods=('GET', 'POST'))
+@login_required
 def delete(id):
     try:
         entry = models.Journal.select().where(
@@ -116,4 +156,8 @@ def delete(id):
 
 if __name__ == '__main__':
     models.initialize()
+    models.User.create_user(
+        username='adenes',
+        password='G4mestar'
+    )
     app.run(debug=DEBUG, port=PORT, host=HOST)
