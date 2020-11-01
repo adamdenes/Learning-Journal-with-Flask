@@ -12,7 +12,7 @@
                 <input id="time-spent" type="text" name="journal_time_spent" value="{{ entry.time_spent }}"><br>
                 <textarea id="what-i-learned" rows="5" name="journal_learned" value="{{ entry.learned }}">{{ entry.learned }}</textarea>
                 <textarea id="resources-to-remember" rows="5" name="journal_resources" value="{{ entry.resources }}">{{ entry.resources }}</textarea>
-                <input type="submit" value="Publish Entry" class="button">
+                <input type="submit" value="Edit Entry" class="button">
                 <a href="{{ url_for('detail', id=entry.id) }}" class="button button-secondary">Cancel</a>
             </form>
         </div>
