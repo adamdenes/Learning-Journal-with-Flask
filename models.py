@@ -44,8 +44,10 @@ class User(UserMixin, Model):
     def create_user(cls, username, password):
         try:
             with DATABASE.transaction():
-                cls.create(username=username,
-                           password=generate_password_hash(password))
+                cls.create(
+                    username=username,
+                    password=generate_password_hash(password)
+                )
         except IntegrityError:
             pass
 
