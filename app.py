@@ -51,6 +51,12 @@ def after_request(response):
 
 @app.route('/login', methods=('GET', 'POST'))
 def login():
+    """
+    Login existing user.
+    Please use the test user:
+    username : test_user
+    password : password
+    """
     form = forms.LoginForm()
     if form.validate_on_submit():
         try:
@@ -145,6 +151,7 @@ def edit(id):
 @app.route('/entries/<int:id>/delete', methods=('GET', 'POST'))
 @login_required
 def delete(id):
+    """Delete existing entry."""
     try:
         entry = models.Journal.select().where(
             models.Journal.id == id
@@ -161,8 +168,8 @@ def delete(id):
 if __name__ == '__main__':
     models.initialize()
     models.User.create_user(
-        username='adenes',
-        password='G4mestar'
+        username='test_user',
+        password='password'
     )
 
     if models.Journal.select().count() == 0:
