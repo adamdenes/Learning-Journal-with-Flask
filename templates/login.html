@@ -8,11 +8,6 @@
             <form action="{{ url_for('login') }}" method="POST">
                 {{ form.hidden_tag() }}
                 {% for field in form %}
-                    {% if field.errors %}
-                        {% for err in errors %}
-                            <p>{{ err }}</p>
-                        {% endfor %}
-                    {% endif %}
                     {{ field(placeholder=field.label.text)}}
                 {% endfor %}
                 <input type="submit" value="LOGIN" class="button">
