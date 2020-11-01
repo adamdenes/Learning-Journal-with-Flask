@@ -85,17 +85,21 @@ def entries():
 def add():
     """Adding journal entry to the database and view."""
     form = forms.AddEntryForm()
+    query = models.Journal.select().where(models.Journal.title == form.journal_title.data)
 
     if form.validate_on_submit():
-        models.Journal.create_journal(
-            title=form.journal_title.data,
-            date=form.journal_date.data,
-            time_spent=form.journal_time_spent.data,
-            learned=form.journal_learned.data,
-            resources=form.journal_resources.data
-        )
-
-        return redirect(url_for('index'))
+        if query:
+            flash('Entry with that Title already exists.')
+        else:
+            models.Journal.create_journal(
+                title=form.journal_title.data,
+                date=form.journal_date.data,
+                time_spent=form.journal_time_spent.data,
+                learned=form.journal_learned.data,
+                resources=form.journal_resources.data
+            )
+            flash('New entry added successfully!', 'success')
+            return redirect(url_for('index'))
     return render_template('new.html', form=form)
 
 
@@ -133,7 +137,7 @@ def edit(id):
             learned=edit_form.journal_learned.data,
             resources=edit_form.journal_resources.data
         ).where(models.Journal.id == id).execute()
-
+        flash('Entry updated successfully', 'success')
         return redirect(url_for('detail', id=id))
     return render_template('edit.html', edit_form=edit_form, entry=entry)
 
@@ -146,11 +150,11 @@ def delete(id):
             models.Journal.id == id
         ).get()
     except models.DoesNotExist:
-        flash('Entry id does not exist!')
+        flash('Entry id does not exist!', 'error')
 
     with models.DATABASE.atomic():
         models.Journal.delete_by_id(entry)
-        flash('Following entry was deleted: {}'.format(entry.id))
+        flash('Following entry was deleted: {}'.format(entry.title))
     return redirect(url_for('index'))
 
 
@@ -160,4 +164,14 @@ if __name__ == '__main__':
         username='adenes',
         password='G4mestar'
     )
+
+    if models.Journal.select().count() == 0:
+        models.Journal.create_journal(
+            title='Hello, World! Flask edition.',
+            date=datetime.datetime.now(),
+            time_spent=1,
+            learned='Learned some flask!',
+            resources='teamtreehouse'
+
+        )
     app.run(debug=DEBUG, port=PORT, host=HOST)

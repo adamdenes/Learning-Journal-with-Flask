@@ -1,15 +1,16 @@
 from flask_wtf.form import FlaskForm
 from wtforms.fields.core import DateField, IntegerField, StringField
 from wtforms.fields.simple import TextAreaField, PasswordField
-from wtforms.validators import DataRequired, Optional
+from wtforms.validators import DataRequired, Optional, ValidationError
 
-from models import Journal
+import models
 
 
 class AddEntryForm(FlaskForm):
     journal_title = StringField(
         'Title',
-        validators=[DataRequired()]
+        validators=[DataRequired(),
+        ]
     )
     journal_date = DateField(
         'YYYY-MM-DD',
