@@ -18,9 +18,6 @@ class Journal(Model):
         database = DATABASE
         order_by = ('-date',)
 
-    def get_tags(self):
-        return Tag.select().where(Tag.tag == self)
-
     @classmethod
     def create_journal(cls, title, date, time_spent, learned, resources):
         try:
