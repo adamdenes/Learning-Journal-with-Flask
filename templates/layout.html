@@ -24,11 +24,11 @@
     </header>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <div class=entry-list>
+        <!-- <div class=entry-list> -->
             {% for message in messages %}
-            <p>{{ message }}</p>
+            <p style="color:tomato; text-align:center">{{ message }}</p>
             {% endfor %}
-        </div>
+        <!-- </div> -->
         {% endif %}
     {% endwith %}
     {% block section %}
