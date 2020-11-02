@@ -1,6 +1,4 @@
 import datetime
-from enum import unique
-from operator import index
 
 from peewee import *
 from flask_login import UserMixin
@@ -19,7 +17,6 @@ class Journal(Model):
     class Meta:
         database = DATABASE
         order_by = ('-date',)
-
 
     def get_tags(self):
         return Tag.select().where(Tag.tag == self)
@@ -60,7 +57,7 @@ class User(UserMixin, Model):
 
 class Tag(Model):
     tag_name = CharField()
-    tag = ForeignKeyField(rel_model=Journal, backref="tags")
+    tag = ForeignKeyField(Journal, backref="tags")
 
     class Meta:
         database = DATABASE
