@@ -1,4 +1,6 @@
 import datetime
+from enum import unique
+from operator import index
 
 from peewee import *
 from flask_login import UserMixin
@@ -17,6 +19,10 @@ class Journal(Model):
     class Meta:
         database = DATABASE
         order_by = ('-date',)
+
+
+    def get_tags(self):
+        return Tag.select().where(Tag.tag == self)
 
     @classmethod
     def create_journal(cls, title, date, time_spent, learned, resources):
@@ -49,10 +55,28 @@ class User(UserMixin, Model):
                     password=generate_password_hash(password)
                 )
         except IntegrityError:
-            pass
+            return User.get(User.username == username)
+
+
+class Tag(Model):
+    tag_name = CharField()
+    tag = ForeignKeyField(rel_model=Journal, backref="tags")
+
+    class Meta:
+        database = DATABASE
+
+    @classmethod
+    def create_tag(cls, tag_name):
+        try:
+            with DATABASE.transaction():
+                cls.create(
+                    tag_name=tag_name,
+                )
+        except IntegrityError:
+            return Tag.get(Tag.tag_name == tag_name)
 
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([Journal, User], safe=True)
+    DATABASE.create_tables([Journal, User, Tag], safe=True)
     DATABASE.close()

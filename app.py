@@ -167,6 +167,7 @@ def delete(id):
 
 if __name__ == '__main__':
     models.initialize()
+
     models.User.create_user(
         username='test_user',
         password='password'
@@ -179,6 +180,6 @@ if __name__ == '__main__':
             time_spent=1,
             learned='Learned some flask!',
             resources='teamtreehouse'
-
         )
+
     app.run(debug=DEBUG, port=PORT, host=HOST)
