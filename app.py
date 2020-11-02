@@ -1,5 +1,5 @@
 from flask import (Flask, g, render_template, flash,
-                   redirect, url_for)
+                   redirect, url_for, abort)
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_required, login_user
 
@@ -156,13 +156,13 @@ def delete(id):
         entry = models.Journal.select().where(
             models.Journal.id == id
         ).get()
+        with models.DATABASE.atomic():
+            models.Journal.delete_by_id(entry)
+            flash('Following entry was deleted: {}'.format(entry.title))
     except models.DoesNotExist:
         flash('Entry id does not exist!', 'error')
-
-    with models.DATABASE.atomic():
-        models.Journal.delete_by_id(entry)
-        flash('Following entry was deleted: {}'.format(entry.title))
     return redirect(url_for('index'))
+
 
 
 if __name__ == '__main__':
