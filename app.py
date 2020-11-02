@@ -34,7 +34,7 @@ def user(uid):
     try:
         return models.User.get(models.User.id == uid)
     except models.DoesNotExist:
-        flash("User does not exist")
+        flash("User does not exist!")
         return None
 
 
@@ -144,7 +144,7 @@ def edit(id):
             learned=edit_form.journal_learned.data,
             resources=edit_form.journal_resources.data
         ).where(models.Journal.id == id).execute()
-        flash('Entry updated successfully', 'success')
+        flash('Entry updated successfully!', 'success')
         return redirect(url_for('detail', id=id))
     return render_template('edit.html', edit_form=edit_form, entry=entry)
 
