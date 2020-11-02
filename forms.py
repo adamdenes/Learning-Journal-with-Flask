@@ -1,9 +1,7 @@
 from flask_wtf.form import FlaskForm
 from wtforms.fields.core import DateField, IntegerField, StringField
 from wtforms.fields.simple import TextAreaField, PasswordField
-from wtforms.validators import DataRequired, Optional, ValidationError
-
-import models
+from wtforms.validators import DataRequired, Optional
 
 
 class AddEntryForm(FlaskForm):
