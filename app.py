@@ -1,5 +1,5 @@
 from flask import (Flask, g, render_template, flash,
-                   redirect, url_for, abort)
+                   redirect, url_for)
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_required, login_user
 
