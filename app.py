@@ -4,7 +4,7 @@ from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_required, login_user
 
 import os
-import datetime 
+import datetime
 
 import models
 import forms
@@ -92,7 +92,8 @@ def entries():
 def add():
     """Adding journal entry to the database and view."""
     form = forms.AddEntryForm()
-    query = models.Journal.select().where(models.Journal.title == form.journal_title.data)
+    query = models.Journal.select().where(
+        models.Journal.title == form.journal_title.data)
 
     if form.validate_on_submit():
         if query:
@@ -163,7 +164,6 @@ def delete(id):
     except models.DoesNotExist:
         flash('Entry id does not exist!', 'error')
     return redirect(url_for('index'))
-
 
 
 if __name__ == '__main__':

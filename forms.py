@@ -8,7 +8,7 @@ class AddEntryForm(FlaskForm):
     journal_title = StringField(
         'Title',
         validators=[DataRequired(),
-        ]
+                    ]
     )
     journal_date = DateField(
         'YYYY-MM-DD',
@@ -31,11 +31,11 @@ class AddEntryForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     username = StringField(
-        'Username', 
-        validators=[DataRequired()], 
+        'Username',
+        validators=[DataRequired()],
         default=''
     )
     password = PasswordField(
-        'Password', 
+        'Password',
         validators=[DataRequired()]
     )

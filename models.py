@@ -44,7 +44,7 @@ class User(UserMixin, Model):
     def create_user(cls, username, password):
         try:
             with DATABASE.transaction():
-                cls.create(
+                cls.get_or_create(
                     username=username,
                     password=generate_password_hash(password)
                 )
@@ -52,25 +52,7 @@ class User(UserMixin, Model):
             return User.get(User.username == username)
 
 
-class Tag(Model):
-    tag_name = CharField()
-    tag = ForeignKeyField(Journal, backref="tags")
-
-    class Meta:
-        database = DATABASE
-
-    @classmethod
-    def create_tag(cls, tag_name):
-        try:
-            with DATABASE.transaction():
-                cls.create(
-                    tag_name=tag_name,
-                )
-        except IntegrityError:
-            return Tag.get(Tag.tag_name == tag_name)
-
-
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([Journal, User, Tag], safe=True)
+    DATABASE.create_tables([Journal, User], safe=True)
     DATABASE.close()
