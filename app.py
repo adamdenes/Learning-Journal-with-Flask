@@ -77,7 +77,7 @@ def login():
 @app.route('/')
 def index():
     """Index route/view, renders all titles and dates from all journal entries."""
-    entries = models.Journal.select()
+    entries = models.Journal.select().order_by(models.Journal.date.desc())
     return render_template('index.html', entries=entries)
 
 
