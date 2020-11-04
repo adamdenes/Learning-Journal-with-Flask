@@ -16,7 +16,7 @@ class Journal(Model):
 
     class Meta:
         database = DATABASE
-        order_by = ('-date',)
+        order_by = ('-date',)  # order_by has been removed from Model Meta options in 3.6.0
 
     @classmethod
     def create_journal(cls, title, date, time_spent, learned, resources):
