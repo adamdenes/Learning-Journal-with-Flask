@@ -7,10 +7,15 @@
             <h2>Edit Entry</h2>
             <form action="{{ url_for('edit', id=entry.id) }}" method='POST'>
                 {{ edit_form.hidden_tag() }}
+                <label for="title"> Title</label>
                 <input id="title" type="text" name="journal_title" value="{{ entry.title }}"><br>
+                <label for="date">Date</label>
                 <input id="date" type="text" name="journal_date" value="{{ entry.date.strftime('%Y-%m-%d') }}"><br>
+                <label for="time-spent"> Time Spent</label>
                 <input id="time-spent" type="text" name="journal_time_spent" value="{{ entry.time_spent }}"><br>
+                <label for="what-i-learned">What I Learned</label>
                 <textarea id="what-i-learned" rows="5" name="journal_learned" value="{{ entry.learned }}">{{ entry.learned }}</textarea>
+                <label for="resources-to-remember">Resources to Remember</label>
                 <textarea id="resources-to-remember" rows="5" name="journal_resources" value="{{ entry.resources }}">{{ entry.resources }}</textarea>
                 <input type="submit" value="Edit Entry" class="button">
                 <a href="{{ url_for('detail', id=entry.id) }}" class="button button-secondary">Cancel</a>

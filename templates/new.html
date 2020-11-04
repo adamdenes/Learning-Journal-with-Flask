@@ -7,9 +7,16 @@
             <h2>New Entry</h2>
             <form action="{{ url_for('add') }}" method="POST">
                 {{ form.hidden_tag() }}
-                {% for field in form %}
-                    {{ field(placeholder=field.label.text)}}
-                {% endfor %}
+                <label for="title"> Title</label>
+                <input id="title" type="text" name="journal_title"><br>
+                <label for="date">Date</label>
+                <input id="date" type="text" name="journal_date"><br>
+                <label for="time-spent"> Time Spent</label>
+                <input id="time-spent" type="text" name="journal_time_spent"><br>
+                <label for="what-i-learned">What I Learned</label>
+                <textarea id="what-i-learned" rows="5" name="journal_learned"></textarea>
+                <label for="resources-to-remember">Resources to Remember</label>
+                <textarea id="resources-to-remember" rows="5" name="journal_resources"></textarea>
                 <input type="submit" value="Publish Entry" class="button">
                 <a href="{{ url_for('index') }}" class="button button-secondary">Cancel</a>
             </form>
